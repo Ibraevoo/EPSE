@@ -27,7 +27,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-     - name: Build project
-       run: |
-         find . -name "*.c" -print
-         gcc -Wall -Wextra -Werror $(find . -name "*.c") -o epse
+      - name: Build project
+        run: |
+          find . -name "*.c" -print
+          gcc -Wall -Wextra -Werror $(find . -name "*.c") -o epse
+
+  syntax-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all C files
+        run: |
+          find . -name "*.c" | while read file
+          do
+            echo "Checking $file"
+            gcc -Wall -Wextra -Werror -fsyntax-only "$file"
+          done
