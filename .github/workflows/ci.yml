@@ -1,0 +1,32 @@
+name: EPSE CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Check formatting
+        run: |
+          find . \( -name "*.c" -o -name "*.h" \) \
+          -exec clang-format --dry-run --Werror -style=LLVM {} \;
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build project
+        run: |
+          gcc -Wall -Wextra -Werror parser/*.c -o epse
