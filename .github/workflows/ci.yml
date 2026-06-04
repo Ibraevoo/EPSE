@@ -27,6 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build project
-        run: |
-          gcc -Wall -Wextra -Werror parser/*.c -o epse
+     - name: Build project
+       run: |
+         find . -name "*.c" -print
+         gcc -Wall -Wextra -Werror $(find . -name "*.c") -o epse
