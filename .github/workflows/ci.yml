@@ -1,0 +1,47 @@
+name: EPSE CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Check formatting
+        run: |
+          find . \( -name "*.c" -o -name "*.h" \) \
+          -exec clang-format --dry-run --Werror -style=LLVM {} \;
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build project
+        run: |
+          find . -name "*.c" -print
+          gcc -Wall -Wextra -Werror $(find . -name "*.c") -o epse
+
+  syntax-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check all C files
+        run: |
+          find . -name "*.c" | while read file
+          do
+            echo "Checking $file"
+            gcc -Wall -Wextra -Werror -fsyntax-only "$file"
+          done
