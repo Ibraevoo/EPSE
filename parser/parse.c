@@ -86,7 +86,7 @@ void parse_and_save(char *filepath) {
 
     if (csv == NULL) {
         printf("Failed to create proteins.csv\n");
-        free(fp);
+        fclose(fp);
         return;
     }
 
